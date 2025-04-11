@@ -2,21 +2,19 @@ import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import CompanyForm from "./CompanyForm";
 import Table from "./Table";
-import { getCompanieById } from "../services/company";
+import { getCompanyByIdAPI } from "../services/company";
 import { CompanyData } from "../types";
 
-type Props = {};
-
-function UpdateCompany({}: Props) {
+function UpdateCompany() {
   const columns = ["name", "city", "phone", "id"];
   const { id } = useParams<{ id: string }>();
 
   const [data, setData] = useState<CompanyData | null>(null);
 
-  const getCompanies = async () => {
+  const getCompany = async () => {
     if (id) {
       try {
-        const response = await getCompanieById(id);
+        const response = await getCompanyByIdAPI(id);
         console.log(response);
         setData(response);
       } catch (error) {
@@ -25,7 +23,7 @@ function UpdateCompany({}: Props) {
     }
   };
   useEffect(() => {
-    getCompanies();
+    getCompany();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (

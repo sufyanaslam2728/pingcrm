@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { CompanyData } from "../types";
 import {
-  deleteCompany as deleteCompanyAPI,
-  createCompany as createCompanyAPI,
-  updateCompany as updateCompanyAPI,
+  deleteCompanyAPI,
+  createCompanyAPI,
+  updateCompanyAPI,
 } from "../services/company";
 import ConfirmModal from "./ConfirmModal";
 import toast from "react-hot-toast";

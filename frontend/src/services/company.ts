@@ -1,18 +1,19 @@
 import axios from "axios";
 import { CompanyData } from "../types";
 
-export const getCompanies = async (): Promise<any> => {
-  console.log("URL: ", process.env.REACT_APP_BACKEND_URL);
+export const getCompaniesAPI = async (name?: string): Promise<any> => {
   try {
-    const response = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/companies/`,
-      {
-        headers: {
-          accept: "application/json",
-        },
-        maxBodyLength: Infinity,
-      }
-    );
+    const url = name
+      ? `${process.env.REACT_APP_BACKEND_URL}/companies/?name=${name}`
+      : `${process.env.REACT_APP_BACKEND_URL}/companies/`;
+
+    const response = await axios.get(url, {
+      headers: {
+        accept: "application/json",
+      },
+      maxBodyLength: Infinity,
+    });
+
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -24,7 +25,7 @@ export const getCompanies = async (): Promise<any> => {
   }
 };
 
-export const getCompanieById = async (id: string): Promise<any> => {
+export const getCompanyByIdAPI = async (id: string): Promise<any> => {
   try {
     const response = await axios.get(
       `${process.env.REACT_APP_BACKEND_URL}/companies/${id}`,
@@ -46,7 +47,7 @@ export const getCompanieById = async (id: string): Promise<any> => {
   }
 };
 
-export const deleteCompany = async (companyId: number) => {
+export const deleteCompanyAPI = async (companyId: number) => {
   try {
     const response = await axios.delete(
       `${process.env.REACT_APP_BACKEND_URL}/companies/${companyId}`,
@@ -63,7 +64,7 @@ export const deleteCompany = async (companyId: number) => {
   }
 };
 
-export const updateCompany = async (
+export const updateCompanyAPI = async (
   companyId: number,
   companyData: CompanyData
 ) => {
@@ -85,7 +86,7 @@ export const updateCompany = async (
   }
 };
 
-export const createCompany = async (companyData: CompanyData) => {
+export const createCompanyAPI = async (companyData: CompanyData) => {
   try {
     const response = await axios.post(
       `${process.env.REACT_APP_BACKEND_URL}/companies/`,
