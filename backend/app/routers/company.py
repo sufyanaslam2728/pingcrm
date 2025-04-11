@@ -47,4 +47,6 @@ def delete(company_id: int, db: Session = Depends(get_db)):
     deleted = crud.delete_company(db, company_id)
     if deleted is None:
         raise HTTPException(status_code=404, detail="Company not found")
+    if deleted is False:
+        raise HTTPException(status_code=400, detail="Cannot delete company with existing associated contacts")
     return {"detail": "Deleted"}

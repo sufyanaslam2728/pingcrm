@@ -30,6 +30,8 @@ def update_company(db: Session, company_id: int, updated_data: schemas.CompanyUp
 
 def delete_company(db: Session, company_id: int):
     company = get_company(db, company_id)
+    if company.contacts and len(company.contacts) > 0:
+        return False
     if company:
         db.delete(company)
         db.commit()
