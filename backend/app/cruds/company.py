@@ -1,9 +1,9 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session,joinedload
 from app.models import company as model
 from app.schemas import company as schemas
 
 def create_company(db: Session, company: schemas.CompanyCreate):
-    db_company = model.Company(**model.dict())
+    db_company = model.Company(**company.model_dump())
     db.add(db_company)
     db.commit()
     db.refresh(db_company)
@@ -12,17 +12,17 @@ def create_company(db: Session, company: schemas.CompanyCreate):
 def get_companies(db: Session, skip: int = 0, limit: int = 100, name: str = None):
     query = db.query(model.Company)
     if name:
-        query = query.filter(model.model.name.ilike(f"%{name}%"))
+        query = query.filter(model.Company.name.ilike(f"%{name}%"))
     return query.offset(skip).limit(limit).all()
 
 def get_company(db: Session, company_id: int):
-    return db.query(model.Company).filter(model.model.id == company_id).first()
+    return db.query(model.Company).options(joinedload(model.Company.contacts)).filter(model.Company.id == company_id).first()
 
 def update_company(db: Session, company_id: int, updated_data: schemas.CompanyUpdate):
     company = get_company(db, company_id)
     if not company:
         return None
-    for key, value in updated_data.dict().items():
+    for key, value in updated_data.model_dump().items():
         setattr(company, key, value)
     db.commit()
     db.refresh(company)

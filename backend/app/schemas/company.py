@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from typing import List
+from app.schemas.contact import ContactOut
 
 class CompanyBase(BaseModel):
     name: str
@@ -18,6 +20,6 @@ class CompanyUpdate(CompanyBase):
 
 class CompanyOut(CompanyBase):
     id: int
-
+    contacts: List[ContactOut] = []
     class Config:
-        orm_mode = True
+        from_attributes = True

@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
 from app.schemas import contact 
 from app.cruds import contact as crud
 from ..database import SessionLocal
@@ -15,7 +16,13 @@ def get_db():
 
 @router.post("/", response_model=contact.ContactOut)
 def create(contact: contact.ContactCreate, db: Session = Depends(get_db)):
-    return crud.create_contact(db, contact)
+    try:
+        return crud.create_contact(db, contact)
+    except SQLAlchemyError as e:
+        # Log actual error internally if needed
+        raise HTTPException(status_code=400, detail=f"Database Error: {str(e.orig)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected Error: {str(e)}")
 
 @router.get("/", response_model=list[contact.ContactWithCompany])
 def read_contacts(name: str = None, company_name: str = None, db: Session = Depends(get_db)):

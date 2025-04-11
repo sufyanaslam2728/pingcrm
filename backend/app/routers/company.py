@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
 from app.schemas import company
 from app.cruds import company as crud
 from ..database import SessionLocal
@@ -15,7 +16,13 @@ def get_db():
 
 @router.post("/", response_model=company.CompanyOut)
 def create(company: company.CompanyCreate, db: Session = Depends(get_db)):
-    return crud.create_company(db, company)
+    try:
+        return crud.create_company(db, company)
+    except SQLAlchemyError as e:
+        # Log actual error internally if needed
+        raise HTTPException(status_code=400, detail=f"Database Error: {str(e.orig)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected Error: {str(e)}")
 
 @router.get("/", response_model=list[company.CompanyOut])
 def read_companies(name: str = None, db: Session = Depends(get_db)):
