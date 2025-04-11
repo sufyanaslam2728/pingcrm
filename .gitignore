@@ -35,3 +35,4 @@ frontend/coverage/
 .vscode/
 .idea/
 *.log
+.history
