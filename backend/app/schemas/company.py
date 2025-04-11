@@ -20,6 +20,10 @@ class CompanyUpdate(CompanyBase):
 
 class CompanyOut(CompanyBase):
     id: int
+    class Config:
+        from_attributes = True
+class CompanyOutWithContacts(CompanyBase):
+    id: int
     contacts: List[ContactOut] = []
     class Config:
         from_attributes = True

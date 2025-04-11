@@ -28,7 +28,7 @@ def create(company: company.CompanyCreate, db: Session = Depends(get_db)):
 def read_companies(name: str = None, db: Session = Depends(get_db)):
     return crud.get_companies(db, name=name)
 
-@router.get("/{company_id}", response_model=company.CompanyOut)
+@router.get("/{company_id}", response_model=company.CompanyOutWithContacts)
 def read_company(company_id: int, db: Session = Depends(get_db)):
     db_company = crud.get_company(db, company_id)
     if db_company is None:
