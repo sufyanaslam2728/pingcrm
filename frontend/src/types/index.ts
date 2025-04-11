@@ -1,4 +1,4 @@
-export interface OrganizationData {
+export interface CompanyData {
   name: string;
   email: string;
   phone: string;

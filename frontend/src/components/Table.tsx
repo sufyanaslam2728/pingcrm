@@ -1,18 +1,27 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-interface TableProps {
+interface TableProps<T> {
   columns: string[];
-  data: Array<Record<string, string | number>> | [];
+  data: T[];
   table_name: string;
 }
 
-const Table: React.FC<TableProps> = ({ columns, data, table_name }) => {
+const Table = <T extends { id?: number }>({
+  columns,
+  data,
+  table_name,
+}: TableProps<T>) => {
   const navigate = useNavigate();
+
+  const formatHeader = (col: string) =>
+    col === "id"
+      ? ""
+      : col.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+
   return (
     <div className="overflow-x-auto shadow-sm border-b border-gray-200 rounded-lg">
       <table className="min-w-full table-auto">
-        {/* Table Header */}
         <thead className="bg-white">
           <tr>
             {columns.map((col, index) => (
@@ -20,20 +29,21 @@ const Table: React.FC<TableProps> = ({ columns, data, table_name }) => {
                 key={index}
                 className="py-4 px-6 text-left text-md md:text-lg font-semibold border-b tracking-wider"
               >
-                {col === "id" ? "" : col[0].toUpperCase() + col.slice(1)}
+                {formatHeader(col)}
               </th>
             ))}
           </tr>
         </thead>
 
-        {/* Table Body */}
         <tbody className="bg-white">
           {data.map((row, index) => (
             <tr
               key={index}
-              className="border-b hover:bg-gray-100"
+              className="border-b hover:bg-gray-100 cursor-pointer"
               onClick={() => {
-                navigate(`/${table_name}/edit/${row.id}`);
+                if (row.id !== undefined) {
+                  navigate(`/${table_name}/edit/${row.id}`);
+                }
               }}
             >
               {columns.map((col, colIndex) => (
@@ -41,7 +51,7 @@ const Table: React.FC<TableProps> = ({ columns, data, table_name }) => {
                   key={colIndex}
                   className="py-4 px-6 text-md md:text-lg text-gray-800"
                 >
-                  {col === "id" ? ">" : row[col]}
+                  {col === "id" ? ">" : String(row[col as keyof T] ?? "")}
                 </td>
               ))}
             </tr>

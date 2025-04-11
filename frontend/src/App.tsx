@@ -5,64 +5,68 @@ import {
   Navigate,
 } from "react-router-dom";
 import "./App.css";
-import Organizations from "./components/Organizations";
+import Companies from "./components/Companies";
 // import NotFound from "./components/NotFound";
 import Contacts from "./components/Contacts";
 import Layout from "./components/Layout";
-import CreateOrganization from "./components/CreateOrganization";
-import UpdateOrganization from "./components/UpdateOrganization";
+import CreateCompany from "./components/CreateCompany";
+import UpdateCompany from "./components/UpdateCompany";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Default path redirect */}
-        <Route path="/" element={<Navigate to="/organizations" replace />} />
+    <>
+      <Toaster />
+      <Router>
+        <Routes>
+          {/* Default path redirect */}
+          <Route path="/" element={<Navigate to="/companies" replace />} />
 
-        <Route
-          path="/organizations"
-          element={
-            <Layout>
-              <Organizations />
-            </Layout>
-          }
-        />
-        <Route
-          path="/organizations/create"
-          element={
-            <Layout>
-              <CreateOrganization />
-            </Layout>
-          }
-        />
-        <Route
-          path="/organizations/edit/:id"
-          element={
-            <Layout>
-              <UpdateOrganization />
-            </Layout>
-          }
-        />
-        <Route
-          path="/organizations/create"
-          element={
-            <Layout>
-              <CreateOrganization />
-            </Layout>
-          }
-        />
+          <Route
+            path="/companies"
+            element={
+              <Layout>
+                <Companies />
+              </Layout>
+            }
+          />
+          <Route
+            path="/companies/create"
+            element={
+              <Layout>
+                <CreateCompany />
+              </Layout>
+            }
+          />
+          <Route
+            path="/companies/edit/:id"
+            element={
+              <Layout>
+                <UpdateCompany />
+              </Layout>
+            }
+          />
+          <Route
+            path="/companies/create"
+            element={
+              <Layout>
+                <CreateCompany />
+              </Layout>
+            }
+          />
 
-        <Route
-          path="/contacts"
-          element={
-            <Layout>
-              <Contacts />
-            </Layout>
-          }
-        />
-        {/* <Route path="*" element={<NotFound />} /> */}
-      </Routes>
-    </Router>
+          <Route
+            path="/contacts"
+            element={
+              <Layout>
+                <Contacts />
+              </Layout>
+            }
+          />
+          {/* <Route path="*" element={<NotFound />} /> */}
+        </Routes>
+      </Router>
+    </>
   );
 }
 

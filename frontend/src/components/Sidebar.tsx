@@ -10,12 +10,12 @@ const Sidebar = () => {
       </div>
       <nav className="p-12 text-[#B2B7FF] text-lg flex flex-col gap-5">
         <Link
-          to="/organizations"
+          to="/companies"
           className={`${
-            path === "/organizations" ? "text-white" : "hover:text-white"
+            path === "/companies" ? "text-white" : "hover:text-white"
           }`}
         >
-          @ Organizations
+          @ Companies
         </Link>
         <Link
           to="/contacts"

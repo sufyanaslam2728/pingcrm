@@ -1,35 +1,111 @@
-import React, { useState } from "react";
-import { OrganizationData } from "../types/organization";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { CompanyData } from "../types";
+import {
+  deleteCompany as deleteCompanyAPI,
+  createCompany as createCompanyAPI,
+  updateCompany as updateCompanyAPI,
+} from "../services/company";
+import ConfirmModal from "./ConfirmModal";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
-  data?: OrganizationData;
+  data?: CompanyData;
   form: "edit" | "create";
+  id?: string;
 };
 
-const OrganizationForm = ({ data, form }: Props) => {
-  const [name, setName] = useState(data ? data.name : "");
-  const [email, setEmail] = useState(data ? data.email : "");
-  const [phone, setPhone] = useState(data ? data.phone : "");
-  const [address, setAddress] = useState(data ? data.address : "");
-  const [city, setCity] = useState(data ? data.city : "");
-  const [state, setState] = useState(data ? data.province : "");
-  const [country, setCountry] = useState(data ? data.country : "");
-  const [code, setCode] = useState(data ? data.postal_code : "");
+const CompanyForm = ({ data, form, id }: Props) => {
+  const navigate = useNavigate();
+  const [name, setName] = useState(data?.name ?? "");
+  const [email, setEmail] = useState(data?.email ?? "");
+  const [phone, setPhone] = useState(data?.phone ?? "");
+  const [address, setAddress] = useState(data?.address ?? "");
+  const [city, setCity] = useState(data?.city ?? "");
+  const [state, setState] = useState(data?.province ?? "");
+  const [country, setCountry] = useState(data?.country ?? "");
+  const [code, setCode] = useState(data?.postal_code ?? "");
 
-  const createOrganization = () => {
-    // e.preventDefault();
-    console.log("submit");
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState<"delete" | "update" | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleCreate = async () => {
+    const formData: CompanyData = {
+      name,
+      email,
+      phone,
+      address,
+      city,
+      province: state,
+      country,
+      postal_code: code,
+    };
+
+    try {
+      setIsLoading(true);
+      await createCompanyAPI(formData);
+      toast.success("Company created successfully");
+      navigate("/companies");
+    } catch (err) {
+      toast.error("Failed to create company");
+    } finally {
+      setIsLoading(false);
+    }
   };
-  const updateOrganization = () => {
-    // e.preventDefault();
-    console.log("submit");
+
+  const handleUpdate = async () => {
+    const formData: CompanyData = {
+      name,
+      email,
+      phone,
+      address,
+      city,
+      province: state,
+      country,
+      postal_code: code,
+    };
+    try {
+      setIsLoading(true);
+      if (!id) throw new Error("ID missing");
+      await updateCompanyAPI(+id, formData);
+      toast.success("Company updated successfully");
+    } catch (err) {
+      toast.error("Failed to update company");
+    } finally {
+      setIsLoading(false);
+      setShowModal(false);
+    }
   };
-  const deleteOrganization = () => {
-    // const ans = confirm("Are you sure you want to delete this organization?");
+
+  const handleDelete = async () => {
+    try {
+      setIsLoading(true);
+      if (!id) throw new Error("ID missing");
+      await deleteCompanyAPI(+id);
+      toast.success("Company deleted successfully");
+      navigate("/companies");
+    } catch (err) {
+      toast.error("Failed to delete company");
+    } finally {
+      setIsLoading(false);
+      setShowModal(false);
+    }
   };
+
+  const openModal = (type: "delete" | "update") => {
+    setModalType(type);
+    setShowModal(true);
+  };
+
   return (
-    <form className="max-w-4xl bg-white rounded-md shadow-md">
+    <form
+      className="max-w-4xl bg-white rounded-md shadow-md"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (form === "create") handleCreate();
+      }}
+    >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-7">
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -137,27 +213,46 @@ const OrganizationForm = ({ data, form }: Props) => {
           <button
             type="submit"
             className="px-6 py-2 bg-[#5661B3] text-white rounded-md hover:bg-orange-600 transition"
-            onSubmit={createOrganization}
+            onSubmit={handleCreate}
+            disabled={isLoading}
           >
-            Create Organization
+            {isLoading ? "Creating..." : "Create Company"}
           </button>
         </div>
       ) : (
         <div className="px-8 py-5 border-t flex justify-between bg-[#F9FAFB] rounded-b-md">
-          <button className="text-red-600 text-lg" onClick={deleteOrganization}>
-            Delete Organization
+          <button
+            className="text-red-600 text-lg"
+            onClick={() => openModal("delete")}
+            disabled={isLoading}
+          >
+            Delete Company
           </button>
           <button
             type="submit"
             className="px-6 py-2 bg-[#5661B3] text-white rounded-md hover:bg-orange-600 transition"
-            onSubmit={updateOrganization}
+            onClick={() => openModal("update")}
+            disabled={isLoading}
           >
-            Update Organization
+            Update Company
           </button>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={showModal}
+        title={modalType === "delete" ? "Delete Company" : "Update Company"}
+        message={
+          modalType === "delete"
+            ? "Are you sure you want to delete this company?"
+            : "Are you sure you want to update this company?"
+        }
+        onConfirm={modalType === "delete" ? handleDelete : handleUpdate}
+        onCancel={() => setShowModal(false)}
+        isLoading={isLoading}
+      />
     </form>
   );
 };
 
-export default OrganizationForm;
+export default CompanyForm;
