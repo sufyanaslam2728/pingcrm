@@ -16,7 +16,7 @@ class ContactOut(ContactBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ContactWithCompany(BaseModel):
     id: int
@@ -27,4 +27,4 @@ class ContactWithCompany(BaseModel):
     company_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True

@@ -6,7 +6,7 @@ class Company(Base):
     __tablename__ = "companies"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
+    name = Column(String,unique=True, index=True)
     email = Column(String, unique=True, index=True)
     phone = Column(String)
     address = Column(String)

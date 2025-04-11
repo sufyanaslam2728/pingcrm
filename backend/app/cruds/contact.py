@@ -1,20 +1,22 @@
 from sqlalchemy.orm import Session
-from app import models, schemas
+from app.models import contact as model_contact
+from app.models import company as model_company
+from app.schemas import contact as schemas
 
 def create_contact(db: Session, contact: schemas.ContactCreate):
-    db_contact = models.Contact(**contact.dict())
+    db_contact = model_contact.Contact(**contact.model_dump())
     db.add(db_contact)
     db.commit()
     db.refresh(db_contact)
     return db_contact
 
 def get_contacts(db: Session, name: str = None, company_name: str = None):
-    query = db.query(models.Contact).join(models.Company)
+    query = db.query(model_contact.Contact).join(model_contact.Contact.company)
 
     if name:
-        query = query.filter(models.Contact.name.ilike(f"%{name}%"))
+        query = query.filter(model_contact.Contact.name.ilike(f"%{name}%"))
     if company_name:
-        query = query.filter(models.Company.name.ilike(f"%{company_name}%"))
+        query = query.filter(model_company.Company.name.ilike(f"%{company_name}%"))
 
     contacts =  query.all()
     return [
@@ -30,14 +32,14 @@ def get_contacts(db: Session, name: str = None, company_name: str = None):
     ]
 
 def get_contact(db: Session, contact_id: int):
-    return db.query(models.Contact).filter(models.Contact.id == contact_id).first()
+    return db.query(model_contact.Contact).filter(model_contact.Contact.id == contact_id).first()
 
 def update_contact(db: Session, contact_id: int, updated_data: schemas.ContactUpdate):
     contact = get_contact(db, contact_id)
     if not contact:
         return None
 
-    for key, value in updated_data.dict(exclude_unset=True).items():
+    for key, value in updated_data.model_dump(exclude_unset=True).items():
         setattr(contact, key, value)
 
     db.commit()
