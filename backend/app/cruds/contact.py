@@ -20,12 +20,12 @@ def get_contacts(db: Session, name: str = None, company_name: str = None):
     contacts =  query.all()
     return [
         {
-            "id": model.id,
-            "name": model.name,
-            "phone": model.phone,
-            "city": model.city,
-            "company": model.company.name, 
-            "company_id": model.company.id
+            "id": contact.id,
+            "name": contact.name,
+            "phone": contact.phone,
+            "city": contact.city,
+            "company": contact.company.name, 
+            "company_id": contact.company.id
         }
         for contact in contacts
     ]
