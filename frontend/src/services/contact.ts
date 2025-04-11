@@ -30,17 +30,6 @@ export const getContacts = async (
     throw error;
   }
 };
-// All contacts
-// await getContacts();
-
-// Filter by name only
-// await getContacts("Anna");
-
-// Filter by company name only
-// await getContacts(undefined, "Microsoft Inc");
-
-// Filter by both
-// await getContacts("Anna", "Microsoft Inc");
 
 export const createContactAPI = async (
   contactData: ContactData

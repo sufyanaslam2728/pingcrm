@@ -154,13 +154,21 @@ const ContactForm = ({ data, form, id }: Props) => {
           <label className="block mb-2 text-sm font-medium text-gray-700">
             Company:
           </label>
-          <input
-            type="text"
+          <select
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
             required
             value={companyId}
             onChange={(e) => setCompanyId(e.target.value)}
-          />
+          >
+            <option value="" disabled>
+              Select a company
+            </option>
+            {companies.map((company: any) => (
+              <option key={company.id} value={company.id}>
+                {company.name}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 

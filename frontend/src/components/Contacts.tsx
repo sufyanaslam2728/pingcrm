@@ -23,24 +23,19 @@ const Contacts = () => {
     }
   };
 
-  const getAllContactsByName = async (name: string) => {
+  const getAllContactsBySearchFilters = async (
+    name?: string,
+    company?: string
+  ) => {
     try {
-      const response = await getContacts(name);
+      const response = await getContacts(name, company);
       setData(response);
       console.log("Filtered contacts:", response);
     } catch (error) {
       toast.error("Failed to search contacts!");
     }
   };
-  const getAllContactsByCompany = async (company: string) => {
-    try {
-      const response = await getContacts(undefined, company);
-      setData(response);
-      console.log("Filtered contacts:", response);
-    } catch (error) {
-      toast.error("Failed to search contacts!");
-    }
-  };
+
   useEffect(() => {
     getAllContacts();
   }, []);
@@ -48,10 +43,12 @@ const Contacts = () => {
   // Debounced search
   useEffect(() => {
     const debounce = setTimeout(() => {
-      if (nameSearch.trim()) {
-        getAllContactsByName(nameSearch);
+      if (nameSearch.trim() && companySearch.trim()) {
+        getAllContactsBySearchFilters(nameSearch, companySearch);
+      } else if (nameSearch.trim()) {
+        getAllContactsBySearchFilters(nameSearch);
       } else if (companySearch.trim()) {
-        getAllContactsByCompany(companySearch);
+        getAllContactsBySearchFilters(undefined, companySearch);
       } else {
         getAllContacts();
       }
@@ -74,7 +71,7 @@ const Contacts = () => {
           />
           <input
             type="search"
-            placeholder="Search by organization..."
+            placeholder="Search by company..."
             className="border border-gray-300 rounded px-4 py-2 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={companySearch}
             onChange={(e) => setCompanySearch(e.target.value)}

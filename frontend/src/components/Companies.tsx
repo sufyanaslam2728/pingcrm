@@ -54,7 +54,7 @@ const Companies = () => {
       <div className="flex flex-col gap-5">
         <div className="flex justify-between items-center px-4">
           <input
-            type="text"
+            type="search"
             placeholder="Search by name..."
             className="border border-gray-300 rounded px-4 py-2 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={search}

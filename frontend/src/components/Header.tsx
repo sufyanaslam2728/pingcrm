@@ -4,9 +4,6 @@ const Header = () => {
       <div className="text-base font-normal text-[#6a6f77]">
         Acme Corporation
       </div>
-      <div className="flex items-center space-x-4">
-        <div className="w-8 h-8 rounded-full bg-indigo-200"></div>
-      </div>
     </header>
   );
 };

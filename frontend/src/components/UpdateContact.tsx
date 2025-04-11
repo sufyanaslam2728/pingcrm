@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { ContactData } from "../types";
 import ContactForm from "./ContactForm";
 import { getContactByIdAPI } from "../services/contact";
 
 function UpdateContact() {
-  //   const columns = ["name", "city", "phone", "id"];
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   const [data, setData] = useState<ContactData | null>(null);
@@ -18,6 +18,7 @@ function UpdateContact() {
         setData(response);
       } catch (error) {
         console.error("Failed to fetch contact:", error);
+        navigate("/not-found");
       }
     }
   };

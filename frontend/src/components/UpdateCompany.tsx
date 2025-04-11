@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import CompanyForm from "./CompanyForm";
 import Table from "./Table";
 import { getCompanyByIdAPI } from "../services/company";
@@ -7,6 +7,7 @@ import { CompanyData } from "../types";
 
 function UpdateCompany() {
   const columns = ["name", "city", "phone", "id"];
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   const [data, setData] = useState<CompanyData | null>(null);
@@ -19,6 +20,7 @@ function UpdateCompany() {
         setData(response);
       } catch (error) {
         console.error("Failed to fetch company:", error);
+        navigate("/not-found");
       }
     }
   };
