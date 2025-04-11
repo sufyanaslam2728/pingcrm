@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app import schemas, crud
+from app.schemas import company
+from app.cruds import company as crud
 from ..database import SessionLocal
 
 router = APIRouter(prefix="/companies", tags=["Companies"])
@@ -12,23 +13,23 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/", response_model=schemas.CompanyOut)
-def create(company: schemas.CompanyCreate, db: Session = Depends(get_db)):
+@router.post("/", response_model=company.CompanyOut)
+def create(company: company.CompanyCreate, db: Session = Depends(get_db)):
     return crud.create_company(db, company)
 
-@router.get("/", response_model=list[schemas.CompanyOut])
+@router.get("/", response_model=list[company.CompanyOut])
 def read_companies(name: str = None, db: Session = Depends(get_db)):
     return crud.get_companies(db, name=name)
 
-@router.get("/{company_id}", response_model=schemas.CompanyOut)
+@router.get("/{company_id}", response_model=company.CompanyOut)
 def read_company(company_id: int, db: Session = Depends(get_db)):
     db_company = crud.get_company(db, company_id)
     if db_company is None:
         raise HTTPException(status_code=404, detail="Company not found")
     return db_company
 
-@router.put("/{company_id}", response_model=schemas.CompanyOut)
-def update(company_id: int, company: schemas.CompanyUpdate, db: Session = Depends(get_db)):
+@router.put("/{company_id}", response_model=company.CompanyOut)
+def update(company_id: int, company: company.CompanyUpdate, db: Session = Depends(get_db)):
     updated = crud.update_company(db, company_id, company)
     if updated is None:
         raise HTTPException(status_code=404, detail="Company not found")
