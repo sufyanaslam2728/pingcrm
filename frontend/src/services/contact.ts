@@ -10,9 +10,8 @@ export const getContacts = async (
 
     if (name) params.append("name", name);
     if (company_name) params.append("company_name", company_name);
-
     const response = await axios.get(
-      `${process.env.REACT_APP_BACKEND_API}/contacts/?${params.toString()}`,
+      `${process.env.REACT_APP_BACKEND_URL}/contacts/?${params.toString()}`,
       {
         headers: {
           accept: "application/json",

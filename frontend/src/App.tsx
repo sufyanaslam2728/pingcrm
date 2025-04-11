@@ -6,12 +6,14 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import Companies from "./components/Companies";
-// import NotFound from "./components/NotFound";
+import NotFound from "./components/NotFound";
 import Contacts from "./components/Contacts";
 import Layout from "./components/Layout";
 import CreateCompany from "./components/CreateCompany";
 import UpdateCompany from "./components/UpdateCompany";
 import { Toaster } from "react-hot-toast";
+import UpdateContact from "./components/UpdateContact";
+import CreateContact from "./components/CreateContact";
 
 function App() {
   return (
@@ -47,15 +49,6 @@ function App() {
             }
           />
           <Route
-            path="/companies/create"
-            element={
-              <Layout>
-                <CreateCompany />
-              </Layout>
-            }
-          />
-
-          <Route
             path="/contacts"
             element={
               <Layout>
@@ -63,7 +56,24 @@ function App() {
               </Layout>
             }
           />
-          {/* <Route path="*" element={<NotFound />} /> */}
+          <Route
+            path="/contacts/create"
+            element={
+              <Layout>
+                <CreateContact />
+              </Layout>
+            }
+          />
+          <Route
+            path="/contacts/edit/:id"
+            element={
+              <Layout>
+                <UpdateContact />
+              </Layout>
+            }
+          />
+          <Route path="/not-found" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </>

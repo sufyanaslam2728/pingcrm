@@ -32,7 +32,7 @@ function UpdateCompany() {
         <Link to="/companies" className="text-[#7886D7]">
           Companies/{" "}
         </Link>
-        Name
+        {data?.name}
       </h1>
       {data && <CompanyForm form="edit" data={data} id={id} />}
       <h2 className="text-2xl font-semibold mt-12 mb-8 text-gray-800">
