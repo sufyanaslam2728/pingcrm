@@ -137,6 +137,10 @@ For this project, I used the following AI tools to accelerate development and im
 
 ![Add Contact Modal](screenshots/add-contact.png)
 
+### 📋 FastAPI Docs Page
+
+![FastAPI Docs](screenshots/fastapi-docs.png)
+
 ---
 
 ## 🙏 Thanks
